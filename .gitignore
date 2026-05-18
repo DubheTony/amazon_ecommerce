@@ -1,5 +1,4 @@
-# === 数据文件（原始数据只读，不纳入版本管理） ===
-input/
+# === 原始数据（CSV 纳入版本管理，xlsx 排除） ===
 anilsharma87-sales/
 data/raw/
 
