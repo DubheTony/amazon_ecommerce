@@ -1,5 +1,5 @@
-# === 原始数据（CSV 纳入版本管理，xlsx 排除） ===
-anilsharma87-sales/
+# === 原始数据 ===
+input/
 data/raw/
 
 # === 中间处理结果 ===
