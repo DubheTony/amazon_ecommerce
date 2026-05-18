@@ -1,0 +1,27 @@
+# === 数据文件（原始数据只读，不纳入版本管理） ===
+input/
+anilsharma87-sales/
+data/raw/
+
+# === 中间处理结果 ===
+data/processed/
+*.save
+
+# === 大文件/二进制的文档 ===
+*.docx
+*.doc
+*.pbix
+output/
+
+# === Python ===
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
