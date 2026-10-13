@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>汇报主线与思维导图 — 利润导向电商销售分析</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: "Microsoft YaHei", "SimHei", "Noto Sans SC", sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    overflow-x: hidden;
+}
+
+/* ---- Header ---- */
+.header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    padding: 40px 60px;
+    text-align: center;
+}
+.header h1 { font-size: 32px; margin-bottom: 8px; }
+.header p { font-size: 15px; color: #aab; margin: 0; }
+
+/* ---- Legend ---- */
+.legend-bar {
+    display: flex; justify-content: center; gap: 32px;
+    padding: 14px 20px; background: #fff; border-bottom: 1px solid #e0e0e0;
+    font-size: 14px; flex-wrap: wrap;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.legend-dot.critique { background: #e74c3c; }
+.legend-dot.foundation { background: #3498db; }
+.legend-dot.analysis { background: #2ecc71; }
+.legend-dot.validation { background: #f39c12; }
+.legend-dot.conclusion { background: #9b59b6; }
+
+/* ---- Container ---- */
+.container { max-width: 1300px; margin: 0 auto; padding: 40px 20px; }
+
+/* ============ 主线流程图 ============ */
+.flow-section { margin-bottom: 60px; }
+.section-title {
+    font-size: 22px; font-weight: 700; margin-bottom: 30px;
+    padding-left: 14px; border-left: 5px solid #1a1a2e;
+}
+
+.flow-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap; margin-bottom: 16px;
+}
+.flow-node {
+    background: #fff; border-radius: 10px; padding: 16px 24px;
+    text-align: center; min-width: 130px; max-width: 200px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
+}
+.flow-node.core { border-top: 4px solid #1a1a2e; }
+.flow-node.critique { border-top: 4px solid #e74c3c; }
+.flow-node.foundation { border-top: 4px solid #3498db; }
+.flow-node.analysis { border-top: 4px solid #2ecc71; }
+.flow-node.validation { border-top: 4px solid #f39c12; }
+.flow-node.conclusion { border-top: 4px solid #9b59b6; }
+
+.flow-node .step-num {
+    font-size: 11px; color: #999; font-weight: 600; margin-bottom: 4px;
+}
+.flow-node .step-title {
+    font-size: 15px; font-weight: 700; line-height: 1.4;
+}
+.flow-node .step-sub {
+    font-size: 12px; color: #777; margin-top: 4px; line-height: 1.5;
+}
+
+.flow-arrow {
+    font-size: 24px; color: #bbb; margin: 0 12px;
+    flex-shrink: 0;
+}
+
+/* ============ 思维导图 ============ */
+.mindmap-section { margin-bottom: 50px; }
+
+.tree-wrap {
+    background: #fff; border-radius: 10px; padding: 40px 30px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow-x: auto;
+}
+
+/* SVG tree */
+.tree-svg { width: 100%; min-width: 1100px; }
+
+.node {}
+.node-label {
+    font-family: "Microsoft YaHei", "SimHei", sans-serif;
+    font-weight: 600;
+}
+.link {
+    fill: none; stroke: #bbb; stroke-width: 1.8;
+    stroke-linecap: round;
+}
+
+/* ---- Toggle button ---- */
+.toggle-bar {
+    display: flex; justify-content: center; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+}
+.toggle-bar button {
+    padding: 8px 20px; border: 1px solid #ddd;
+    border-radius: 20px; background: #fff; cursor: pointer;
+    font-size: 13px; font-family: inherit;
+    transition: all 0.2s;
+}
+.toggle-bar button:hover { background: #f0f0f0; }
+.toggle-bar button.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+
+/* ---- Tooltip ---- */
+.tooltip {
+    position: fixed; pointer-events: none;
+    background: rgba(0,0,0,0.85); color: #fff;
+    padding: 8px 14px; border-radius: 5px;
+    font-size: 13px; line-height: 1.6;
+    opacity: 0; transition: opacity 0.15s;
+    max-width: 320px; z-index: 200;
+    white-space: pre-line;
+}
+
+/* ---- Footer ---- */
+.footer {
+    text-align: center; padding: 20px; color: #aaa; font-size: 13px;
+    border-top: 1px solid #e0e0e0; background: #fff;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>利润导向电商销售分析 — 汇报主线与思维导图</h1>
+    <p>基于 Python 语言 · 多渠道损益拆解 · 费用结构对比 · 折扣策略评估</p>
+</div>
+
+<div class="legend-bar">
+    <div class="legend-item"><span class="legend-dot critique"></span> 方法论批判</div>
+    <div class="legend-item"><span class="legend-dot foundation"></span> 基础定义</div>
+    <div class="legend-item"><span class="legend-dot analysis"></span> 分析展开</div>
+    <div class="legend-item"><span class="legend-dot validation"></span> 稳健性检验</div>
+    <div class="legend-item"><span class="legend-dot conclusion"></span> 结论与复盘</div>
+</div>
+
+<div class="container">
+
+<!-- ===== 主线流程图 ===== -->
+<div class="flow-section">
+    <div class="section-title">汇报主线流程</div>
+    <div class="flow-row">
+        <div class="flow-node critique">
+            <div class="step-num">第一部分</div>
+            <div class="step-title">批判原方案</div>
+            <div class="step-sub">4P框架 · ML不适用<br>数据集约束</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node foundation">
+            <div class="step-num">第二~四部分</div>
+            <div class="step-title">建立新框架</div>
+            <div class="step-sub">研究目标 · 数据预处理<br>利润公式验证</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node analysis">
+            <div class="step-num">第五~七部分</div>
+            <div class="step-title">核心分析</div>
+            <div class="step-sub">相关性 · 渠道拆解<br>亏损诊断 · 折扣评估</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node validation">
+            <div class="step-num">第八部分</div>
+            <div class="step-title">稳健性检验</div>
+            <div class="step-sub">时间敏感性 · 渠道稳定性<br>与ML方案对比</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node conclusion">
+            <div class="step-num">第九~十部分</div>
+            <div class="step-title">结论与复盘</div>
+            <div class="step-sub">6条核心发现<br>ML错误三维复盘</div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 思维导图 ===== -->
+<div class="mindmap-section">
+    <div class="section-title">完整思维导图</div>
+
+    <div class="toggle-bar">
+        <button id="btnAll" class="active" onclick="expandAll()">全部展开</button>
+        <button id="btnL1" onclick="collapseToLevel(1)">仅主线</button>
+        <button id="btnL2" onclick="collapseToLevel(2)">到二级</button>
+        <button id="btnL3" onclick="collapseToLevel(3)">到三级</button>
+    </div>
+
+    <div class="tree-wrap">
+        <svg class="tree-svg" id="treeSvg" viewBox="0 0 1700 2100"></svg>
+    </div>
+    <div class="tooltip" id="tooltip"></div>
+</div>
+
+</div>
+
+<div class="footer">
+    利润导向电商销售分析 — 汇报逻辑结构 · 2026.05
+</div>
+
+<script>
+const treeData = {
+    name: "利润导向电商销售分析",
+    color: "#1a1a2e",
+    detail: "15页幻灯片 | 小组成员：A · B · C\n基于Python语言，替代原随机森林预测方案，\n以描述性统计+分组对比方法进行多渠道损益拆解",
+    children: [
+        // ===== 一、批判原方案 =====
+        {
+            name: "一、对原ML方案的方法论批判",
+            color: "#c0392b",
+            detail: "指出原随机森林利润预测方案的根本性错误，\n论证为何本数据集不适合ML预测",
+            children: [
+                {
+                    name: "4P框架不适用",
+                    color: "#e74c3c",
+                    detail: "4P是营销管理分类框架，非利润因果模型\n→ 内部高度相关（价格↔促销↔渠道）\n→ 相当于用超市货架标签预测销售额"
+                },
+                {
+                    name: "ML方法四重不适用",
+                    color: "#e74c3c",
+                    detail: "",
+                    children: [
+                        { name: "目标泄漏", color: "#e74c3c",
+                          detail: "Net_Amount是贡献毛利组成部分\n特征重要性81.5%是会计恒等式，非模型发现" },
+                        { name: "输入输出颠倒", color: "#e74c3c",
+                          detail: "使用Payment/Commission等事后变量\n真预测需要品类/渠道/定价等事前变量" },
+                        { name: "样本不适合", color: "#e74c3c",
+                          detail: "1,392条，Myntra占53%\n4个渠道不足10条，RMSE虚假精度" },
+                        { name: "时间不成立", color: "#e74c3c",
+                          detail: "仅5个月有效数据\n\"年\"\"天\"列为常量，无法识别季节效应" }
+                    ]
+                },
+                {
+                    name: "数据集约束",
+                    color: "#e74c3c",
+                    detail: "样本量1,392 | 渠道极不平衡 | Portal_Payment为批次变量\nMeesho折扣率异常(-13%) | COVID-19+排灯节不可外推\n核心结论：本数据只能做描述性拆解，不能做事前预测"
+                }
+            ]
+        },
+
+        // ===== 二~四、建立新框架 =====
+        {
+            name: "二~四、研究框架建立",
+            color: "#2471a3",
+            detail: "替代路径：从ML预测转向描述性利润拆解",
+            children: [
+                {
+                    name: "四大研究目标",
+                    color: "#2e86c1",
+                    detail: "",
+                    children: [
+                        { name: "利润拆解", color: "#3498db",
+                          detail: "Net_Amount → 逐项扣除费用 → 贡献毛利\n回答：钱被谁赚走了？" },
+                        { name: "渠道间比较", color: "#3498db",
+                          detail: "控制SKU，跨渠道比较贡献毛利与费用结构\n回答：同一商品在哪卖最赚钱？" },
+                        { name: "亏损诊断", color: "#3498db",
+                          detail: "区分：成本过高(TP>Net) vs 费用过高(平台吞噬)\n回答：为什么亏？" },
+                        { name: "折扣评估", color: "#3498db",
+                          detail: "量化折扣对利润的侵蚀程度\n回答：折扣打到多少就亏了？" }
+                    ]
+                },
+                {
+                    name: "数据预处理",
+                    color: "#2e86c1",
+                    detail: "",
+                    children: [
+                        { name: "三路分流", color: "#3498db",
+                          detail: "Delivered 1,392条→核心分析\nCancelled 363条→罚款统计(渠道级)\nReturned 283条→退货统计(约-272K INR)" },
+                        { name: "已知问题处理", color: "#3498db",
+                          detail: "日期NaT保留 | Meesho TP=0剔除\nMirraw Portal正值原因未明不修正\nML编码方法(One-hot/频率)在此不适用" }
+                    ]
+                },
+                {
+                    name: "利润公式验证",
+                    color: "#2e86c1",
+                    detail: "",
+                    children: [
+                        { name: "公式验证(100%吻合)", color: "#3498db",
+                          detail: "Payment = Net + Commission + Shipping + Other + TCS + TDS\n贡献毛利 = Payment - TP\nGST不在扣费中（Net已含GST，卖方另行申报）" },
+                        { name: "贡献毛利限定", color: "#3498db",
+                          detail: "非净利润：不含仓储费/包装费/广告费等\nTP可能低估真实成本" }
+                    ]
+                }
+            ]
+        },
+
+        // ===== 五~七、核心分析 =====
+        {
+            name: "五~七、核心分析展开",
+            color: "#1e8449",
+            detail: "三层次递进：相关性→费用结构→折扣效果",
+            children: [
+                {
+                    name: "相关性分析",
+                    color: "#27ae60",
+                    detail: "",
+                    children: [
+                        { name: "Pearson相关系数", color: "#2ecc71",
+                          detail: "贡献毛利 vs Net_Amount: 高度正相关（会计恒等式）\nTP与贡献毛利强负相关\n费用项与贡献毛利均负相关" },
+                        { name: "跨渠道SKU重叠", color: "#2ecc71",
+                          detail: "分析同款产品在不同渠道的利润差异\n控制产品变量，隔离渠道效应" }
+                    ]
+                },
+                {
+                    name: "渠道费用结构拆解",
+                    color: "#27ae60",
+                    detail: "核心发现：渠道选择即利润",
+                    children: [
+                        { name: "费用占比图", color: "#2ecc71",
+                          detail: "各渠道Commission/Shipping/GST等占比\nMyntra运费占比显著高于Amazon" },
+                        { name: "亏损诊断", color: "#2ecc71",
+                          detail: "98%亏损由费用导致（非TP>Net）\n仅2%是产品成本问题\n→ 问题在平台，不在产品" },
+                        { name: "品类盈亏", color: "#2ecc71",
+                          detail: "Kurta Set亏损率27.9%最高\n平均TP远超Kurta，售价未能覆盖成本差距" }
+                    ]
+                },
+                {
+                    name: "折扣策略评估",
+                    color: "#27ae60",
+                    detail: "核心发现：折扣>60%近半亏损",
+                    children: [
+                        { name: "折扣区间vs亏损率", color: "#2ecc71",
+                          detail: ">60%折扣：亏损率49.8%\n>70%折扣：亏损率78.9%\n未见\"以量补价\"效果" },
+                        { name: "同渠道内分析", color: "#2ecc71",
+                          detail: "控制渠道变量，隔离折扣的独立效应\n确认折扣效应不是渠道效应" },
+                        { name: "数据局限", color: "#2ecc71",
+                          detail: "缺少广告/流量/转化率数据\n无法评估促销的间接收益" }
+                    ]
+                }
+            ]
+        },
+
+        // ===== 八、稳健性检验 =====
+        {
+            name: "八、稳健性检验",
+            color: "#d4a017",
+            detail: "三重验证确保结论可靠",
+            children: [
+                { name: "时间切分敏感性", color: "#f39c12",
+                  detail: "将数据按月份切分，检验各月结论一致性\n排除单月异常干扰" },
+                { name: "渠道利润稳定性", color: "#f39c12",
+                  detail: "Bootstrap重抽样检验各渠道利润区间\n确认小样本渠道的结论可信度" },
+                { name: "与ML方案对比", color: "#f39c12",
+                  detail: "维度\t本分析\t原ML方案\n方法\t描述统计\t随机森林\n结论\t渠道费用是亏损主因\tNet_Amount最重要\n可用性\t可指导运营\t已知事实复述" }
+            ]
+        },
+
+        // ===== 九~十、结论与复盘 =====
+        {
+            name: "九~十、结论与错误复盘",
+            color: "#7d3c98",
+            detail: "6条核心发现 + ML方案三维错误复盘 + 改进方向",
+            children: [
+                {
+                    name: "六条核心发现",
+                    color: "#8e44ad",
+                    detail: "",
+                    children: [
+                        { name: "①Amazon最稳健", color: "#9b59b6",
+                          detail: "亏损率0.5%，贡献毛利率20.9%\n202单仅1单亏损，所有可比渠道最佳" },
+                        { name: "②Myntra量最大但最亏", color: "#9b59b6",
+                          detail: "53%订单量，亏损率17.1%\n主因平台费用(佣金+运费)非产品成本" },
+                        { name: "③98%亏损由费用导致", color: "#9b59b6",
+                          detail: "不是产品亏本卖\n是平台扣费后\"账算不过来\"" },
+                        { name: "④渠道选择即利润", color: "#9b59b6",
+                          detail: "同款产品不同渠道利润差100~200 INR\n渠道费用结构是差异主因" },
+                        { name: "⑤Kurta Set亏损率27.9%", color: "#9b59b6",
+                          detail: "平均TP远超Kurta\n售价未能覆盖成本差距" },
+                        { name: "⑥折扣超60%近半亏损", color: "#9b59b6",
+                          detail: ">60%→49.8% | >70%→78.9%\n未见以量补价" }
+                    ]
+                },
+                {
+                    name: "五条局限性",
+                    color: "#8e44ad",
+                    detail: "贡献毛利≠净利润 | TP不含仓储/包装费\nCOVID-19+排灯节不可外推 | 样本严重不平衡\n缺少广告/流量/转化率数据"
+                },
+                {
+                    name: "ML方案三维错误复盘",
+                    color: "#8e44ad",
+                    detail: "",
+                    children: [
+                        { name: "方向错", color: "#9b59b6",
+                          detail: "用事后变量做\"预测\"\n本质是对利润再分解\n真预测需事前特征(品类/渠道/定价)" },
+                        { name: "方法错", color: "#9b59b6",
+                          detail: "RMSE虚假置信\nNet×0.20≈随机森林精度\n高精度≠模型好，是答案藏在输入里" },
+                        { name: "解释错", color: "#9b59b6",
+                          detail: "\"Net_Amount重要性81.5%\"是循环论证\n看公式就知道，不需要跑模型" }
+                    ]
+                },
+                {
+                    name: "改进方向",
+                    color: "#8e44ad",
+                    detail: "特征重构：仅用事前变量\n分渠道建模：费用结构差异大\n目标调整：预测亏损概率(二分类)\n补充数据：广告/流量/竞品价格"
+                }
+            ]
+        }
+    ]
+};
+
+// ============ 布局与渲染 ============
+const svg = document.getElementById('treeSvg');
+const tooltip = document.getElementById('tooltip');
+const W = 1700;
+const NODE_W = 180;
+const NODE_H = 52;
+const H_GAP = 100;  // horizontal gap
+const V_GAP = 28;   // vertical gap between siblings
+
+// Collapse state
+const collapsed = new Set();
+
+function isCollapsed(d) { return collapsed.has(d.data.name); }
+
+function setCollapsed(d, val) {
+    if (val) collapsed.add(d.data.name);
+    else collapsed.delete(d.data.name);
+}
+
+function expandAll() {
+    collapsed.clear();
+    document.querySelectorAll('.toggle-bar button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btnAll').classList.add('active');
+    render();
+}
+
+function collapseToLevel(level) {
+    collapsed.clear();
+    document.querySelectorAll('.toggle-bar button').forEach(b => b.classList.remove('active'));
+    document.getElementById('btnL'+level).classList.add('active');
+
+    function walk(node, depth) {
+        if (depth >= level) {
+            collapsed.add(node.data.name);
+            if (node.children) node.children.forEach(c => { collapsed.add(c.data.name); });
+        }
+        if (node.children) node.children.forEach(c => walk(c, depth + 1));
+    }
+    walk({ data: treeData, children: [treeData] }, -1);
+    // Don't collapse root
+    collapsed.delete(treeData.name);
+    render();
+}
+
+function render() {
+    // Build visible tree
+    function visibleTree(node) {
+        const vis = { data: node, children: [] };
+        if (node.children && !isCollapsed(node)) {
+            node.children.forEach(c => vis.children.push(visibleTree(c)));
+        }
+        return vis;
+    }
+    const vRoot = visibleTree(treeData);
+
+    // Compute layout (top-down tree)
+    function layout(node, depth) {
+        if (node.children.length === 0) {
+            node.x = 0;
+            node.y = 0;
+            return { width: NODE_W };
+        }
+        let totalW = 0;
+        const childResults = [];
+        node.children.forEach(c => {
+            const r = layout(c, depth + 1);
+            childResults.push(r);
+            totalW += r.width + (childResults.length > 1 ? H_GAP : 0);
+        });
+        if (node.children.length > 1) totalW -= H_GAP;
+
+        // Position children
+        let cx = -totalW / 2;
+        node.children.forEach((c, i) => {
+            const r = childResults[i];
+            c.x = cx + r.width / 2;
+            cx += r.width + H_GAP;
+        });
+        node.y = depth * (NODE_H + V_GAP + 20);
+        return { width: totalW };
+    }
+
+    const result = layout(vRoot, 0);
+    const totalW = Math.max(result.width, 800);
+    const totalH = (getMaxDepth(vRoot)) * (NODE_H + V_GAP + 20) + NODE_H + 60;
+    const marginX = 60, marginY = 50;
+
+    // Shift all x by center
+    function shiftX(node) {
+        node.x += totalW / 2;
+        node.children.forEach(shiftX);
+    }
+    shiftX(vRoot);
+    // Shift root to marginX
+    const xShift = marginX - vRoot.x;
+    function shiftAllX(node) {
+        node.x += xShift;
+        node.children.forEach(shiftAllX);
+    }
+    shiftAllX(vRoot);
+    // Also shift y
+    function shiftY(node) {
+        node.y += marginY;
+        node.children.forEach(shiftY);
+    }
+    shiftY(vRoot);
+
+    const svgW = totalW + marginX * 2 + 100;
+    const svgH = totalH + marginY * 2;
+
+    let html = '';
+
+    // Draw links
+    function drawLinks(node) {
+        node.children.forEach(c => {
+            const x1 = node.x + NODE_W / 2;
+            const y1 = node.y + NODE_H;
+            const x2 = c.x + NODE_W / 2;
+            const y2 = c.y;
+            const cy1 = y1 + (y2 - y1) * 0.4;
+            const cy2 = y1 + (y2 - y1) * 0.6;
+            html += `<path class="link" d="M${x1},${y1} C${x1},${cy1} ${x2},${cy2} ${x2},${y2}" />`;
+            drawLinks(c);
+        });
+    }
+    drawLinks(vRoot);
+
+    // Draw nodes
+    function drawNodes(node) {
+        const d = node.data;
+        const isRoot = d === treeData;
+        const isLeaf = !d.children || d.children.length === 0;
+        const fc = d.color || '#888';
+        const x = node.x, y = node.y;
+        const w = NODE_W, h = isRoot ? NODE_H + 8 : NODE_H;
+
+        // Node rect
+        const rx = isRoot ? 8 : 4;
+        html += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="#fff" stroke="${fc}" stroke-width="${isRoot ? 2.5 : 1.5}" />`;
+        // Top accent bar
+        html += `<rect x="${x}" y="${y}" width="${w}" height="5" rx="2" fill="${fc}" />`;
+
+        // Text
+        const fontSize = isRoot ? 15 : (isLeaf ? 11.5 : 13);
+        const maxChars = isLeaf ? 16 : 14;
+        let label = d.name;
+        if (label.length > maxChars) label = label.slice(0, maxChars) + '…';
+        const tx = x + w / 2;
+        const ty = y + h / 2 + 2;
+
+        html += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="${fontSize}" font-family="Microsoft YaHei, SimHei, sans-serif" font-weight="600" fill="#222">${esc(label)}</text>`;
+
+        // Collapse indicator
+        if (!isLeaf && isCollapsed(d)) {
+            html += `<text x="${x + w - 8}" y="${y + 16}" text-anchor="middle" font-size="14" fill="#999">+</text>`;
+        }
+
+        drawNodesChildren(node);
+    }
+    function drawNodesChildren(node) {
+        node.children.forEach(c => drawNodes(c));
+    }
+    drawNodes(vRoot);
+
+    // Make invisible click areas
+    function clickAreas(node) {
+        const x = node.x, y = node.y;
+        html += `<rect x="${x}" y="${y}" width="${NODE_W}" height="${NODE_H}" fill="transparent" data-name="${esc(node.data.name)}" data-detail="${esc(node.data.detail || '')}" style="cursor:pointer" />`;
+        node.children.forEach(clickAreas);
+    }
+    clickAreas(vRoot);
+
+    svg.setAttribute('viewBox', `0 0 ${svgW} ${svgH}`);
+    svg.innerHTML = html;
+
+    // Click handlers
+    svg.querySelectorAll('rect[data-name]').forEach(r => {
+        r.addEventListener('click', function(e) {
+            const name = this.getAttribute('data-name');
+            // Find node in tree
+            function find(node) {
+                if (node.data.name === name) return node;
+                for (const c of node.children) {
+                    const f = find(c);
+                    if (f) return f;
+                }
+                return null;
+            }
+            const node = find(vRoot);
+            if (node && node.data.children && node.data.children.length > 0) {
+                setCollapsed(node.data, !isCollapsed(node.data));
+                render();
+            }
+        });
+    });
+
+    // Tooltip handlers
+    svg.querySelectorAll('rect[data-name]').forEach(r => {
+        r.addEventListener('mouseenter', function(e) {
+            const detail = this.getAttribute('data-detail');
+            if (!detail) return;
+            tooltip.style.opacity = '1';
+            tooltip.textContent = detail;
+        });
+        r.addEventListener('mousemove', function(e) {
+            tooltip.style.left = (e.clientX + 16) + 'px';
+            tooltip.style.top = (e.clientY + 12) + 'px';
+        });
+        r.addEventListener('mouseleave', function() {
+            tooltip.style.opacity = '0';
+        });
+    });
+}
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function getMaxDepth(node) {
+    if (node.children.length === 0) return 0;
+    return 1 + Math.max(...node.children.map(getMaxDepth));
+}
+
+render();
+</script>
+
+<script>
+// Button handlers global
+window.expandAll = expandAll;
+window.collapseToLevel = collapseToLevel;
+</script>
+
+</body>
+</html>
