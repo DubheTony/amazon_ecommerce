@@ -1,13 +1,20 @@
 import base64
+import os
+
+# 本脚本在项目根目录，图表由 scripts/ 生成到 output/ 下
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+OUT_DIR = os.path.join(BASE_DIR, 'output')
+
 
 def b64(path):
     with open(path, 'rb') as f:
         return base64.b64encode(f.read()).decode()
 
-fee = b64(r'D:\CodeFiles\Python\amazon_ecommerce\output\fee_structure.png')
-disc_dist = b64(r'D:\CodeFiles\Python\amazon_ecommerce\output\discount_distribution.png')
-disc_vs = b64(r'D:\CodeFiles\Python\amazon_ecommerce\output\discount_vs_margin.png')
-monthly = b64(r'D:\CodeFiles\Python\amazon_ecommerce\output\monthly_margin_trend.png')
+
+fee = b64(os.path.join(OUT_DIR, 'fee_structure.png'))
+disc_dist = b64(os.path.join(OUT_DIR, 'discount_distribution.png'))
+disc_vs = b64(os.path.join(OUT_DIR, 'discount_vs_margin.png'))
+monthly = b64(os.path.join(OUT_DIR, 'monthly_margin_trend.png'))
 
 html = r'''<!DOCTYPE html>
 <html lang="zh-CN">
@@ -481,7 +488,7 @@ showSlide(0);
 </body>
 </html>'''
 
-path = r'D:\CodeFiles\Python\amazon_ecommerce\output\利润导向电商分析_演示.html'
+path = os.path.join(OUT_DIR, '利润导向电商分析_演示.html')
 with open(path, 'w', encoding='utf-8') as f:
     f.write(html)
 print(f'Done: {path}')

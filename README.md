@@ -6,7 +6,7 @@
 
 原始 xlsx 共约 130MB，**没有放进本仓库**。请先把这 7 个文件放到 `anilsharma87-sales/` 目录下：
 
-```
+```text
 anilsharma87-sales/
 ├── P & L March 2021.xlsx              # 核心：19 张表，含 Catalog + 12 个渠道损益表
 ├── Amazon Sale Report.xlsx
@@ -22,7 +22,7 @@ anilsharma87-sales/
 
 ## 目录结构
 
-```
+```text
 amazon-ecommerce/
 ├── anilsharma87-sales/        # 原始 xlsx（自行准备，不纳入版本控制）
 ├── input/                     # 旧代码用的 CSV 导出（自行准备，已弃用）
@@ -35,12 +35,25 @@ amazon-ecommerce/
 │   ├── 04_product_analysis.py
 │   ├── 05_price_analysis.py
 │   └── 06_summary.py
-├── gen_html.py                # 生成演示用 HTML
+├── 利润导向电商分析_演示.html    # 分析汇报（15 页，浏览器直接打开）
+├── 汇报主线思维导图.html        # 汇报提纲与思维导图
+├── gen_html.py                # 把 output/ 下的图表和结论合成上面那份演示页
 ├── 1.ipynb                    # 旧版 Jupyter（含错误：Cost_Price=0）
 ├── random_forest_no_log.py    # 旧版脚本（依赖 notebook 变量，不可独立运行）
 ├── requirements.txt
 └── 介绍.txt                   # 数据集说明
 ```
+
+## 重新生成演示页
+
+`scripts/` 跑完会在 `output/` 下生成图表（该目录不进版本控制），然后：
+
+```bash
+python gen_html.py
+```
+
+它把 `output/` 下的 4 张图和结论合成演示页，写回 `output/利润导向电商分析_演示.html`。
+仓库根目录那份是同一份内容的成品拷贝，方便点开就看。
 
 ## 关键数据约束
 
